@@ -6,6 +6,9 @@ const fs = require('fs');
 
 app.use(express.static(path.join(__dirname, 'build')));
 
+app.use(bodyParser.urlencoded({ limit: '50mb' }));
+app.use(bodyParser.json({ limit: '50mb' }));
+
 app.get('/ping', function (req, res) {
     return res.send('pong');
 });
@@ -16,7 +19,7 @@ app.get('/', function (req, res) {
 
 // Add headers
 app.use(function (req, res, next) {
-    // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -31,6 +34,8 @@ routes.environments = require('./route/environments.js');
 
 app.get('/getEnvironment/:process', routes.environments.getEnvironment);
 app.put('/setEnvironment/:process/:key/:value', routes.environments.setEnvironment);
+app.get('/getListOfProcesses', routes.environments.getListOfProcesses);
+app.put('/updateProcess/:process', routes.environments.updateProcess);
 
 const dir = 'c:node-app';
 const file = '.env';

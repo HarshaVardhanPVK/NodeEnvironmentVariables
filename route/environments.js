@@ -53,3 +53,41 @@ exports.setEnvironment = function (req, res) {
 
     });
 }
+
+exports.getListOfProcesses = function (req, res) {
+
+    fs.readFile(dir + '/' + file, 'utf8', function read(err, data) {
+        if (err) {
+            console.log(err);
+            res.send({});
+        } else {
+            console.log(JSON.parse(data));
+            res.send(JSON.parse(data));
+        }
+
+    });
+}
+
+exports.updateProcess = function (req, res) {
+    console.log(req.body);
+    fs.readFile(dir + '/' + file, 'utf8', function read(err, data) {
+        if (err) {
+            console.log(err);
+            res.send({});
+        } else {
+            console.log(JSON.parse(data));
+            const config = JSON.parse(data);
+            fs.readFile(config[req.params.process] + '/' + file, 'utf8', function read(err, processData) {
+                if (err) {
+                    console.log(err);
+                    res.send({});
+                } else {
+                    fs.writeFile(config[req.params.process] + '/' + file, JSON.stringify(req.body), function (err) {
+                        res.send(req.body);
+                    });
+                }
+            })
+        }
+
+    });
+}
