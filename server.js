@@ -36,6 +36,7 @@ app.get('/getEnvironment/:process', routes.environments.getEnvironment);
 app.put('/setEnvironment/:process/:key/:value', routes.environments.setEnvironment);
 app.get('/getListOfProcesses', routes.environments.getListOfProcesses);
 app.put('/updateProcess/:process', routes.environments.updateProcess);
+app.post('/addProcess', routes.environments.addProcess);
 
 const dir = 'c:node-app';
 const file = '.env';

@@ -91,3 +91,54 @@ exports.updateProcess = function (req, res) {
 
     });
 }
+
+exports.addProcess = function (req, res) {
+    console.log(req.body);
+    fs.readFile(dir + '/' + req.body.folderName + '/' + file, 'utf8', function read(err, data) {
+        if (err) {
+            fs.mkdirSync(dir + '/' + req.body.folderName);
+
+            fs.writeFile(dir + '/' + req.body.folderName + '/' + file, JSON.stringify(req.body.config), function (err) {
+                if (err) {
+                    return res.status(400).send({
+                        error: true,
+                        message: 'Failed to create Process.'
+                    });
+                } else {
+                    console.log("The file was saved!");
+                    fs.readFile(dir + '/' + file, 'utf8', function read(err, data) {
+                        if (err) {
+                            return res.status(400).send({
+                                error: true,
+                                message: 'Failed to create Process.'
+                            });
+                        } else {
+                            const config = JSON.parse(data);
+                            config[req.body.processName] = dir + '/' + req.body.folderName;
+                            fs.writeFile(dir + '/' + file, JSON.stringify(config), function (err) {
+                                if (err) {
+                                    return res.status(400).send({
+                                        error: true,
+                                        message: 'Failed to create Process.'
+                                    });
+                                } else {
+                                    return res.send({
+                                        error: false,
+                                        message: 'Process added.'
+                                    });
+                                }
+                            })
+                        }
+                    })
+                }
+            });
+
+        } else {
+            return res.status(400).send({
+                error: true,
+                message: 'Folder already exists.'
+            });
+        }
+
+    });
+}
